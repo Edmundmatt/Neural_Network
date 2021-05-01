@@ -23,7 +23,6 @@ public class NeuralNetwork {
 
     //Calculate neuron activation for an input
     public double sigmoid(double input) {
-//        double output = Double.NaN; //TODO!
         double output = 1 / (1 + Math.exp(-input));
         return output;
     }
@@ -37,7 +36,7 @@ public class NeuralNetwork {
             //Each O[i] is the real values from the penguin data
             double weighted_sum = 0;
             for(int j = 0; j < num_inputs; j++){
-                weighted_sum += hidden_layer_weights[j][i] * inputs[j];
+                weighted_sum += hidden_layer_weights[j][i] * inputs[i];
             }
             //Sigmoid function on weight_sum
             double output = sigmoid(weighted_sum);
@@ -65,7 +64,6 @@ public class NeuralNetwork {
         //Beta is the difference between desired output and actual output
         //Go over this - desired outputs (one integer?)
         for(int i = 0; i < num_outputs; i++){
-//            output_layer_betas[i] = (double)desired_outputs - output_layer_outputs[i];
             if(i == desired_outputs) output_layer_betas[i] = 1 - output_layer_outputs[i];
             else output_layer_betas[i] = 0 - output_layer_outputs[i];
 //            System.out.println("OL desired: " + desired_outputs);
@@ -146,10 +144,13 @@ public class NeuralNetwork {
                 int predicted_class = findMaxIndex(outputs[1]);
                 predictions[i] = predicted_class;
                 /****/
-                System.out.println("Instance: " + i);
-                System.out.println("Desired output: " + desired_outputs[i]);
-                System.out.println("Predicted output: " + predicted_class + "\n");
-                System.out.println("Output Values: " + Arrays.toString(outputs[1]));
+                //For testing only print the final epoch
+                if(epoch == epochs - 1) {
+                    System.out.println("Instance: " + i);
+                    System.out.println("Desired output: " + desired_outputs[i]);
+                    System.out.println("Predicted output: " + predicted_class);
+                    System.out.println("Output Values: " + Arrays.toString(outputs[1]) + '\n');
+                }
                 /****/
                 //We use online learning, i.e. update the weights after every instance.
                 update_weights(delta_weights[0], delta_weights[1]);
