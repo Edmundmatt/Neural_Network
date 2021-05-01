@@ -31,7 +31,7 @@ public class NeuralNetwork {
     public double[][] forward_pass(double[] inputs) {
         double[] hidden_layer_outputs = new double[num_hidden];
         for (int i = 0; i < num_hidden; i++) {
-            // TODO! Calculate the weighted sum, and then compute the final output.
+            //Calculate the weighted sum, and then compute the final output.
             //For each z = weight[0] * O[0] + weight[1] * O[1] + weight[2] * O[2] + weight[3] * O[3]
             //Each O[i] is the real values from the penguin data
             double weighted_sum = 0;
@@ -45,7 +45,7 @@ public class NeuralNetwork {
 
         double[] output_layer_outputs = new double[num_outputs];
         for (int i = 0; i < num_outputs; i++) {
-            // TODO! Calculate the weighted sum, and then compute the final output.
+            //Calculate the weighted sum, and then compute the final output.
             double weighted_sum = 0;
             for(int j = 0; j < num_hidden; j++){
                 weighted_sum += output_layer_weights[j][i] * hidden_layer_outputs[j];
@@ -60,19 +60,16 @@ public class NeuralNetwork {
                                                  double[] output_layer_outputs, int desired_outputs) {
 
         double[] output_layer_betas = new double[num_outputs];
-        // TODO! Calculate output layer betas.
+        //Calculate output layer betas.
         //Beta is the difference between desired output and actual output
         //Go over this - desired outputs (one integer?)
         for(int i = 0; i < num_outputs; i++){
             if(i == desired_outputs) output_layer_betas[i] = 1 - output_layer_outputs[i];
             else output_layer_betas[i] = 0 - output_layer_outputs[i];
-//            System.out.println("OL desired: " + desired_outputs);
-//            System.out.println("OL Output: " + output_layer_outputs[i]);
         }
-//        System.out.println("OL betas: " + Arrays.toString(output_layer_betas));
 
         double[] hidden_layer_betas = new double[num_hidden];
-        // TODO! Calculate hidden layer betas.
+        //Calculate hidden layer betas.
         //Betah5 = k output layer 1 through 4 (Wh5 -> k * outputk * (1 -outputk) * betak
         for(int i = 0; i < num_hidden; i++){
             double beta = 0;
@@ -83,11 +80,10 @@ public class NeuralNetwork {
             }
             hidden_layer_betas[i] = beta;
         }
-//        System.out.println("HL betas: " + Arrays.toString(hidden_layer_betas));
 
         // This is a HxO array (H hidden nodes, O outputs)
         double[][] delta_output_layer_weights = new double[num_hidden][num_outputs];
-        // TODO! Calculate output layer weight changes.
+        //Calculate output layer weight changes.
         //Delta Weight i->j = learning_rate0.2 * output[i] * output[j] * (beta[j])
         //Weights from hidden layer to output layer (i think)
         for(int i = 0; i < num_hidden; i++){
@@ -99,7 +95,7 @@ public class NeuralNetwork {
 
         // This is a IxH array (I inputs, H hidden nodes)
         double[][] delta_hidden_layer_weights = new double[num_inputs][num_hidden];
-        // TODO! Calculate hidden layer weight changes.
+        //Calculate hidden layer weight changes.
         //Weights from input layer to hidden layer
         for(int i = 0; i < num_inputs; i++){
             for(int j = 0; j < num_hidden; j++){
@@ -113,13 +109,12 @@ public class NeuralNetwork {
     }
 
     public void update_weights(double[][] delta_output_layer_weights, double[][] delta_hidden_layer_weights) {
-        // TODO! Update the weights
+        //Update the weights
         //Hidden layer to output layer
         //Output layer weights
         for(int i = 0; i < num_hidden; i++){
             for(int j = 0; j < num_outputs; j++){
                 output_layer_weights[i][j] += delta_output_layer_weights[i][j];
-//                System.out.println("Updated Output Weights: " + this.output_layer_weights[i][j]);
             }
         }
         //Input layer to hidden layer
@@ -127,7 +122,6 @@ public class NeuralNetwork {
         for(int i = 0; i < num_inputs; i++){
             for(int j = 0; j < num_hidden; j++){
                 hidden_layer_weights[i][j] += delta_hidden_layer_weights[i][j];
-//                System.out.println("Updated Hidden Weights: " + this.hidden_layer_weights[i][j]);
             }
         }
     }
@@ -140,7 +134,6 @@ public class NeuralNetwork {
                 double[] instance = instances[i];
                 double[][] outputs = forward_pass(instance);
                 double[][][] delta_weights = backward_propagate_error(instance, outputs[0], outputs[1], desired_outputs[i]);
-//                int predicted_class = -1; // TODO!
                 int predicted_class = findMaxIndex(outputs[1]);
                 predictions[i] = predicted_class;
                 /****/
@@ -156,11 +149,7 @@ public class NeuralNetwork {
                 update_weights(delta_weights[0], delta_weights[1]);
             }
 
-            // Print new weights
-//            System.out.println("Hidden layer weights \n" + Arrays.deepToString(hidden_layer_weights));
-//            System.out.println("Output layer weights  \n" + Arrays.deepToString(output_layer_weights));
-
-            // TODO: Print accuracy achieved over this epoch
+            //Print accuracy achieved over this epoch
             int accuracyCount = 0;
             for(int i = 0; i < predictions.length; i++){
                 if(predictions[i] == desired_outputs[i]) accuracyCount++;
@@ -175,7 +164,7 @@ public class NeuralNetwork {
         for (int i = 0; i < instances.length; i++) {
             double[] instance = instances[i];
             double[][] outputs = forward_pass(instance);
-            int predicted_class = -1;  // TODO !Should be 0, 1, or 2.
+            int predicted_class = -1;  //Should be 0, 1, or 2.
             //Predicted class determined by which output layer value is biggest
             double[] output_layer_outputs = outputs[1];
             predicted_class = findMaxIndex(output_layer_outputs);
@@ -188,7 +177,7 @@ public class NeuralNetwork {
      * Find the max double index in an array
      */
     private int findMaxIndex(double[] values){
-        double max = -10.0;
+        double max = Double.MIN_VALUE;
         int index = -1;
         for(int i = 0; i < values.length; i++){
             if(values[i] > max){
